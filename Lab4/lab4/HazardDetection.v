@@ -27,16 +27,16 @@ module HazardDetection(
     // In such cases, if forwarding cannot resolve the hazard, you may need to insert a stall to avoid incorrect execution.
 
 always @(*) begin
-    if((ex_Rd == id_R1 || ex_Rd == id_R2 ) && id_opcode == 7'b1100011 && ex_Rd != 0) begin // branch
+    if((ex_Rd == id_R1 || ex_Rd == id_R2 ) && (id_opcode == 7'b1100011|| id_opcode == 7'b1100111) && ex_Rd != 0) begin // branch and jalr @ id and data @ exe 
         RePC = 1'b1;
         Flush_HD = 1'b1;
-    end else if( ex_MemRead == 1 && (ex_Rd == id_R1 || ex_Rd == id_R2 ) && ex_Rd != 0) begin
+    end else if( (ex_Rd == id_R1 || ex_Rd == id_R2 )&& ex_MemRead == 1 && ex_Rd != 0) begin //lw @ exe  and inst in id 
         RePC = 1'b1;
         Flush_HD = 1'b1;
-    end else if( mem_MemRead == 1 && id_opcode == 7'b1100011 && mem_Rd != 0) begin
+    end else if((mem_Rd == id_R1 || mem_Rd == id_R2 ) && mem_MemRead == 1 && (id_opcode == 7'b1100011|| id_opcode == 7'b1100111) && mem_Rd != 0) begin //lw @ mem and branch jalr @ id
         RePC = 1'b1;
         Flush_HD = 1'b1;
-    end else if( mem_memtoReg == 2'b10 && id_opcode ==7'b1100111 && (mem_Rd == id_R1) && mem_Rd != 0)begin
+    end else if( (mem_Rd == id_R1 || mem_Rd == id_R2) && mem_memtoReg == 2'b10 && (id_opcode == 7'b1100011|| id_opcode == 7'b1100111) && mem_Rd != 0)begin //pc+4 writeback @ mem and branch jalr @ id
         RePC = 1'b1;
         Flush_HD = 1'b1;
     end else begin
