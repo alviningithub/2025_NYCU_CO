@@ -385,7 +385,7 @@ EX_MEM_Reg m_EX_MEM_Reg(
     .rst(start),
     .clk(clk),
     .ALUresult_i(ALUOut),
-    .readData2_i(readData2_EX),
+    .readData2_i(ALU_forward2),//?   readData2_EX
     .memtoreg_i(memtoReg_EX),
     .regWrite_i(regWrite_EX),
     .memRead_i(memRead_EX),
